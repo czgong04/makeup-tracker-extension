@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Makeup Product Tracker",
+  "version": "1.0.0",
+  "description": "Automatically picks up makeup product details from sites like Sephora and YesStyle.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.sephora.com/*",
+    "https://www.yesstyle.com/*",
+    "https://www.oliveyoung.com/*",
+    "https://www.ulta.com/*",
+    "http://localhost:3000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.sephora.com/*",
+        "https://www.yesstyle.com/*",
+        "https://www.oliveyoung.com/*",
+        "https://www.ulta.com/*"
+      ],
+      "js": ["src/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  }
+}

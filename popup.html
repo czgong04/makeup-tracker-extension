@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Makeup Tracker</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Makeup Tracker</h1>
+      <nav>
+        <button class="tab-btn active" data-tab="detect">Detect</button>
+        <button class="tab-btn" data-tab="lists">Lists</button>
+        <button class="tab-btn" data-tab="manual">Add</button>
+      </nav>
+    </header>
+
+    <!-- Detect tab -->
+    <section id="tab-detect" class="tab-content active">
+
+      <!-- Search bar -->
+      <div class="search-bar">
+        <input id="search-input" type="text" placeholder="Search for a product..." />
+        <button id="btn-search">Search</button>
+      </div>
+
+      <!-- Search results -->
+      <div id="search-results" class="hidden">
+        <div id="search-loading" class="loading hidden">Searching...</div>
+        <div id="search-error" class="search-error hidden"></div>
+        <ul id="search-list"></ul>
+      </div>
+
+      <!-- Detected / selected product card -->
+      <div id="no-product" class="empty-state">
+        <p>No makeup product detected on this page.</p>
+        <button id="btn-scan">Scan Page</button>
+      </div>
+
+
+      <div id="product-card" class="product-card hidden">
+        <div class="product-top">
+          <img id="product-image" class="product-image hidden" src="" alt="Product image" />
+          <div class="product-info">
+            <div class="product-header">
+              <span id="product-site" class="site-badge"></span>
+              <span id="product-brand" class="brand"></span>
+            </div>
+            <h2 id="product-name"></h2>
+            <div class="product-meta">
+              <span id="product-price" class="price"></span>
+              <span id="product-rating" class="rating"></span>
+            </div>
+          </div>
+        </div>
+        <div id="product-shade-row" class="meta-row hidden">
+          <label>Shade</label><span id="product-shade"></span>
+        </div>
+        <div id="product-size-row" class="meta-row hidden">
+          <label>Size</label><span id="product-size"></span>
+        </div>
+        <div id="product-desc-row" class="meta-row hidden">
+          <label>About</label>
+          <p id="product-description"></p>
+        </div>
+        <div id="product-ingredients-row" class="meta-row ingredients-row hidden">
+          <label>Ingredients</label>
+          <div class="ingredients-body">
+            <p id="product-ingredients" class="ingredients-text collapsed"></p>
+            <button id="btn-expand-ingredients" class="expand-btn hidden">Show all</button>
+          </div>
+        </div>
+
+        <!-- Conflict warnings -->
+        <div id="conflict-warnings" class="hidden"></div>
+
+        <!-- Save row -->
+        <div class="save-row">
+          <select id="list-select"></select>
+          <button id="btn-save">Save</button>
+        </div>
+        <div class="save-footer">
+          <a id="btn-link" href="#" target="_blank" class="link-btn">Open Page</a>
+          <p id="save-confirm" class="save-confirm hidden">Saved!</p>
+          <p id="save-duplicate" class="save-duplicate hidden">Already in list.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Add manually tab -->
+    <section id="tab-manual" class="tab-content hidden">
+      <div class="manual-form">
+        <div class="form-field">
+          <label>Name <span class="required">*</span></label>
+          <input id="manual-name" type="text" placeholder="e.g. Tretinoin 0.05% Cream" />
+        </div>
+        <div class="form-field">
+          <label>Brand</label>
+          <input id="manual-brand" type="text" placeholder="e.g. Obagi" />
+        </div>
+        <div class="form-field">
+          <label>Category</label>
+          <input id="manual-site" type="text" placeholder="e.g. prescription, drugstore" />
+        </div>
+        <div class="form-field">
+          <label>Price</label>
+          <input id="manual-price" type="text" placeholder="e.g. USD 45.00" />
+        </div>
+        <div class="form-field">
+          <label>Shade / Variant</label>
+          <input id="manual-shade" type="text" placeholder="e.g. Light, 0.025%" />
+        </div>
+        <div class="form-field">
+          <label>Notes</label>
+          <textarea id="manual-description" rows="2" placeholder="Usage instructions, dermatologist notes..."></textarea>
+        </div>
+        <div class="form-field">
+          <label>Ingredients</label>
+          <textarea id="manual-ingredients" rows="2" placeholder="Paste ingredient list..."></textarea>
+        </div>
+        <div class="form-field">
+          <label>URL (optional)</label>
+          <input id="manual-url" type="text" placeholder="https://..." />
+        </div>
+        <div class="save-row">
+          <select id="manual-list-select"></select>
+          <button id="btn-save-manual">Save</button>
+        </div>
+        <p id="manual-save-confirm" class="save-confirm hidden">Saved!</p>
+        <p id="manual-error" class="search-error hidden">Please enter a product name.</p>
+      </div>
+    </section>
+
+    <!-- Lists tab -->
+    <section id="tab-lists" class="tab-content hidden">
+      <!-- List browser -->
+      <div id="list-browser">
+        <div class="lists-header">
+          <select id="list-view-select"></select>
+          <button id="btn-new-list" title="New list">+ New</button>
+        </div>
+        <div id="new-list-form" class="new-list-form hidden">
+          <input id="new-list-input" type="text" placeholder="List name..." />
+          <button id="btn-create-list">Create</button>
+        </div>
+        <div id="list-empty" class="empty-state hidden">
+          <p>No products in this list yet.</p>
+        </div>
+        <ul id="list-products"></ul>
+      </div>
+
+      <!-- Product detail card (shown when a list item is clicked) -->
+      <div id="list-product-card" class="hidden">
+        <button id="btn-back-to-list" class="back-btn">←</button>
+        <div class="product-card">
+          <div class="product-top">
+            <img id="lc-image" class="product-image hidden" src="" alt="" />
+            <div class="product-info">
+              <div class="product-header">
+                <span id="lc-site" class="site-badge"></span>
+                <span id="lc-brand" class="brand"></span>
+              </div>
+              <h2 id="lc-name"></h2>
+              <div class="product-meta">
+                <span id="lc-price" class="price"></span>
+                <span id="lc-rating" class="rating"></span>
+              </div>
+            </div>
+          </div>
+          <div id="lc-shade-row" class="meta-row hidden">
+            <label>Shade</label><span id="lc-shade"></span>
+          </div>
+          <div id="lc-size-row" class="meta-row hidden">
+            <label>Size</label><span id="lc-size"></span>
+          </div>
+          <div id="lc-desc-row" class="meta-row hidden">
+            <label>About</label><p id="lc-description"></p>
+          </div>
+          <div id="lc-ingredients-row" class="meta-row ingredients-row hidden">
+            <label>Ingredients</label>
+            <div class="ingredients-body">
+              <p id="lc-ingredients" class="ingredients-text collapsed"></p>
+              <button id="lc-btn-expand" class="expand-btn hidden">Show all</button>
+            </div>
+          </div>
+          <div id="lc-conflicts" class="hidden"></div>
+          <div class="save-footer" style="margin-top:10px">
+            <a id="lc-link" href="#" target="_blank" class="link-btn hidden">Open Page</a>
+            <button id="lc-btn-edit" class="link-btn hidden" style="background:none;border:none;cursor:pointer;">Edit</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="src/conflicts.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
