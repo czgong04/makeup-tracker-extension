@@ -1,4 +1,4 @@
-const BACKEND = "http://localhost:3000";
+const BACKEND = "https://makeup-tracker-backend-production.up.railway.app";
 
 // ── Tab switching ──────────────────────────────────────────────────────────
 document.querySelectorAll(".tab-btn").forEach((btn) => {

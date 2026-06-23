@@ -13,7 +13,8 @@
     "https://www.yesstyle.com/*",
     "https://www.oliveyoung.com/*",
     "https://www.ulta.com/*",
-    "http://localhost:3000/*"
+    "http://localhost:3000/*",
+    "https://makeup-tracker-backend-production.up.railway.app/*"
   ],
   "action": {
     "default_popup": "popup.html",
